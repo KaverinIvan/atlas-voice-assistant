@@ -1,0 +1,28 @@
+============== systemd/voice-assistant.service ============
+
+[Unit]
+Description=Atlas Voice Assistant Server
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=<YOUR_USER>
+WorkingDirectory=/home/<YOUR_USER>/atlas-voice-assistant
+Environment="PATH=/home/<YOUR_USER>/atlas-voice-assistant/venv/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="PYTHONUNBUFFERED=1"
+ExecStart=/home/<YOUR_USER>/atlas-voice-assistant/venv/bin/python -m uvicorn main:app --host 0.0.0.0 --port 8002
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=voice-assistant
+NoNewPrivileges=true
+PrivateTmp=true
+MemoryMax=2G
+CPUQuota=200%
+KillMode=mixed
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target
